@@ -2,3 +2,4 @@
 /vector_db
 .venv
 /.env
+.idea
