@@ -8,4 +8,7 @@ llm = ChatOllama(
     # other params ...
 )
 
-print(llm.invoke("What is machine learning").content)
+# print(llm.invoke("how to fuck you ?").content)
+
+for chunk in llm.stream("What is machine learning?"):
+    print(chunk)
