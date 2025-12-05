@@ -1,4 +1,5 @@
 from langchain_ollama import ChatOllama
+from langchain_core.messages import SystemMessage,HumanMessage
 
 llm = ChatOllama(
     model="llama3.1:latest",
@@ -8,7 +9,11 @@ llm = ChatOllama(
     # other params ...
 )
 
-# print(llm.invoke("how to fuck you ?").content)
+messages = [
+            SystemMessage(content="You are a helpful geography assistant! Your name is Lina."),
+            HumanMessage(content="Why sky is cloudy? what did it denotes? "),
+        ]
 
-for chunk in llm.stream("What is machine learning?"):
-    print(chunk.content)
+answer = llm.invoke(messages)
+
+print(answer.content)
