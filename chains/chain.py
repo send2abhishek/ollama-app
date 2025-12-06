@@ -18,10 +18,14 @@ messages = [system, question]
 
 templates = ChatPromptTemplate(messages)
 
+analysis_prompt = ChatPromptTemplate.from_template(''' analyze the following text: {text} You need to tell me that how difficult it is to understand Answer in one sentence only ''')
+
+
+
  # StrOutputParser will parse the output of llm into string
 chain = templates | llm | StrOutputParser()
 
-res = chain.invoke({'stream': 'geography', 'name': 'Laura', 'points': 5})
+composed_chain = {"text": chain} | analysis_prompt | llm | StrOutputParser()
 
-print(res)
-
+response = composed_chain.invoke({'stream': 'geography', 'name': 'Laura', 'points': 5})
+print(response)
