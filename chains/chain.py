@@ -1,4 +1,5 @@
 from langchain_ollama import ChatOllama
+from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import (SystemMessagePromptTemplate,HumanMessagePromptTemplate,ChatPromptTemplate)
 
 llm = ChatOllama(
@@ -17,9 +18,10 @@ messages = [system, question]
 
 templates = ChatPromptTemplate(messages)
 
-chain = templates | llm
+ # StrOutputParser will parse the output of llm into string
+chain = templates | llm | StrOutputParser()
 
 res = chain.invoke({'stream': 'geography', 'name': 'Laura', 'points': 5})
 
-print(res.content)
+print(res)
 
