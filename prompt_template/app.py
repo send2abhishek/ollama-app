@@ -1,6 +1,6 @@
 from langchain_ollama import ChatOllama
 from langchain_core.messages import SystemMessage,HumanMessage
-from langchain_core.prompts import (SystemMessagePromptTemplate,HumanMessagePromptTemplate,PromptTemplate,ChatPromptTemplate)
+from langchain_core.prompts import (SystemMessagePromptTemplate,HumanMessagePromptTemplate,ChatPromptTemplate)
 
 llm = ChatOllama(
     model="llama3.1:latest",
