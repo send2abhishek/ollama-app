@@ -19,7 +19,8 @@ Classification: '''
 template = ChatPromptTemplate.from_template(prompt)
 chain = template | llm | StrOutputParser()
 
-review = "Thank you so much for providing such a great plateform for learning. I am really happy with the service. "
+# review = "Thank you so much for providing such a great plateform for learning. I am really happy with the service. "
+review = "I am not happy with you! "
 
 output = chain.invoke({'review': review})
 print(output)
@@ -36,7 +37,7 @@ positive_chain = positive_template | llm | StrOutputParser()
 negative_prompt = """
                 You are expert in writing reply for negative reviews.
                 You need first to apologize for the inconvenience caused to the user.
-                You need to encourage the user to share their concern on following Email:'udemy@kgptalkie.com'.
+                You need to encourage the user to share their concern on following Email:'send2abhishek@live.com'.
                 Review: {review}
                 Answer:"""
 
