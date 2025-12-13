@@ -18,7 +18,7 @@ class Joke(BaseModel):
 
     setup: str = Field(description="The setup of the joke")
     punchline: str = Field(description="The punchline of the joke")
-    rating: str = Field(description="The rating of the joke")
+    rating: str = Field(description="The rating of the joke is from 1 to 10")
 
 
 parser = PydanticOutputParser(pydantic_object=Joke)
