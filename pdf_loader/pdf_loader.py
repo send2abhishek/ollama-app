@@ -47,7 +47,7 @@ template = ChatPromptTemplate(messages)
 
 qna_chain = template | llm | StrOutputParser()
 
-response = qna_chain.invoke({'context': context, 'question': "what is vajra akeyless", 'words': 50})
+response = qna_chain.invoke({'context': context, 'question': "what is vajra ?", 'words': 50})
 
 print(response)
 
