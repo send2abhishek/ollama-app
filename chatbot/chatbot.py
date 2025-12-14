@@ -8,6 +8,12 @@ from sqlalchemy.engine import Engine
 import streamlit as st
 
 
+st.set_page_config(
+    page_title="Personal Chatgpt",
+    page_icon="🧊",  # Optional: Adds a favicon (can use emojis or file paths)
+
+)
+
 st.title("Personal Chatbot")
 st.write("Chat anything with me which will remain private to me")
 
