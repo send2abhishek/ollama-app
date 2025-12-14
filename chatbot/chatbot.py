@@ -5,6 +5,13 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import SQLChatMessageHistory
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
+import streamlit as st
+
+
+st.title("Personal Chatbot")
+st.write("Chat anything with me which will remain private to me")
+
+
 
 llm = ChatOllama(
     model="llama3.1:latest",
@@ -18,28 +25,14 @@ def get_session_history(session_id):
     return SQLChatMessageHistory(session_id, connection=engine)
 
 
-user_id='send2abhishek'
+# user_id='send2abhishek'
 
-#
-#
-# template = ChatPromptTemplate.from_template("{prompt}")
-#
-# chain = template | llm | StrOutputParser()
-# runnable_with_history = RunnableWithMessageHistory(chain,get_session_history)
-about = "Hi, I am Abhishek Kumar a software Engineer works in walmart."
-# output = runnable_with_history.invoke([HumanMessage(content=about)],config={'configurable':{'session_id':user_id}})
-#
-# print(output)
-#
-# output_new = runnable_with_history.invoke([HumanMessage(content="whats my profession")],config={'configurable':{'session_id':user_id}})
-#
-# print("new output below")
-# print(output_new)
+
+
 
 system = SystemMessagePromptTemplate.from_template("You are helpful assistance.")
 human = HumanMessagePromptTemplate.from_template("{input}")
 message = [system,MessagesPlaceholder(variable_name='history'), human]
-
 prompt = ChatPromptTemplate(messages=message)
 chain = prompt | llm | StrOutputParser()
 runnable_with_history = RunnableWithMessageHistory(chain,get_session_history,
@@ -47,13 +40,45 @@ runnable_with_history = RunnableWithMessageHistory(chain,get_session_history,
                                                    history_messages_key='history')
 
 
-def cha_with_llm(session_id,input):
-    return runnable_with_history.invoke({'input': input},config={'configurable':{'session_id':session_id}})
+def chat_with_llm(session_id,input):
+    for output in runnable_with_history.stream({'input': input},config={'configurable':{'session_id':session_id}}):
+        yield output
 
 
-output = cha_with_llm(user_id,about)
-print(output)
+user_id = st.text_input("Enter your User ID","send2abhishek")
 
-output = cha_with_llm(user_id,"whats my name ?")
-print(output)
+if "chat_history" not in st.session_state:
+    st.session_state["chat_history"] = []
+
+if st.button("Start New Conversation"):
+    st.session_state.chat_history= []
+    history = get_session_history(user_id)
+    history.clear()
+
+
+for message in st.session_state.chat_history:
+    with st.chat_message(message['role']):
+        st.markdown(message['content'])
+
+
+
+
+prompt = st.chat_input("What is up ?")
+st.write(prompt)
+
+if prompt:
+    st.session_state.chat_history.append({'role': 'user','content': prompt})
+
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+
+    with st.chat_message("assistant"):
+        response = st.write_stream(chat_with_llm(user_id,prompt))
+
+    st.session_state.chat_history.append({'role': 'assistant','content': response})
+
+
+
+
 
