@@ -46,5 +46,8 @@ vector_store.save_local("vajra")
 
 question = "what is vajra akeyless ?"
 docs = vector_store.search(query=question,k=1,search_type="similarity")
-print(docs)
+
+retriever = vector_store.as_retriever(search_type="similarity",search_kwargs={"k":3})
+output = retriever.invoke(question)
+print(output[0].page_content)
 
