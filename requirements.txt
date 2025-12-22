@@ -3,3 +3,4 @@ langchain-ollama
 langchain_community
 streamlit
 tiktoken
+beautifulsoup4
