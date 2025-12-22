@@ -13,13 +13,13 @@ os.makedirs('markitdown', exist_ok=True)
 
 
 md = MarkItDown()
-file_path = Path("doc/onbord.pdf")
 
-print(file_path.stem)
+def convert_save(file_path):
+    file_path = Path(file_path)
+    result = md.convert(file_path)
 
-result = md.convert(file_path)
+    with open(f"markitdown/{file_path.stem}.md", "w", encoding="utf-8") as f:
+        f.write(result.text_content)
 
-# print(result.text_content[:500])
 
-with open(f"markitdown/{file_path.stem}.md", "w", encoding="utf-8") as f:
-    f.write(result.text_content)
+convert_save("doc/onbord.pdf")
