@@ -9,6 +9,7 @@ from langchain_community.tools import TavilySearchResults
 from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain_community.tools.pubmed.tool import PubmedQueryRun
+from langchain_core.messages import HumanMessage
 
 
 load_dotenv()
@@ -132,29 +133,30 @@ def tavily_search(query):
 tools = [wikipedia_search, pubmed_search, tavily_search, multiply]
 
 list_of_tools = { tool.name: tool for tool in tools }
-print(list_of_tools)
+# print(list_of_tools)
 
 llm_with_tools = llm.bind_tools(tools)
 
-print(llm_with_tools.invoke("how to treat lung cancer").tool_calls)
+# print(llm_with_tools.invoke("how to treat lung cancer").tool_calls)
+query = "provide stock market news"
+
+messages = [HumanMessage(query)]
+
+ai_msg = llm_with_tools.invoke(messages)
+
+messages.append(ai_msg)
+# print(msg)
 
 
-#
-# system = SystemMessagePromptTemplate.from_template('You are helpful {stream} assistant! Your name is {name}. ')
-# question = HumanMessagePromptTemplate.from_template('Why sky is cloudy? what did it denotes in {points} points')
-#
-# messages = [system, question]
-#
-# templates = ChatPromptTemplate(messages)
-#
-# analysis_prompt = ChatPromptTemplate.from_template(''' analyze the following text: {text} You need to tell me that how difficult it is to understand Answer in one sentence only ''')
-#
-#
-#
-#  # StrOutputParser will parse the output of llm into string
-# chain = templates | llm | StrOutputParser()
-#
-# composed_chain = {"text": chain} | analysis_prompt | llm | StrOutputParser()
-#
-# response = composed_chain.invoke({'stream': 'geography', 'name': 'Laura', 'points': 5})
-# print(response)
+for tool_call in ai_msg.tool_calls:
+    print(tool_call)
+
+    name = tool_call['name'].lower()
+    selected_tool= list_of_tools[name]
+    tool_msg = selected_tool.invoke(tool_call)
+    messages.append(tool_msg)
+
+
+response = llm_with_tools.invoke(messages)
+
+print(response.content)
