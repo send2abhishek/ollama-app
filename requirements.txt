@@ -1,3 +1,4 @@
+python-dotenv
 langchain
 langchain-ollama
 langchain_community
@@ -7,3 +8,9 @@ beautifulsoup4
 markitdown[all]
 docling
 faiss-cpu
+duckduckgo-search
+wikipedia
+xmltodict
+tavily-python
+ddgs
+dotenv
