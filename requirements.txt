@@ -2,6 +2,7 @@ python-dotenv
 langchain
 langchain-ollama
 langchain_community
+langgraph
 streamlit
 tiktoken
 beautifulsoup4
